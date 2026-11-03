@@ -1,56 +1,59 @@
 # SerialWitness
 
-A standalone, reusable GenLayer Intelligent Contract. No frontend or application server.
+A concurrency check for task plans written in ordinary language.
 
-Compile atomic-operation descriptions into a complete resource-access matrix; derive precedence edges from actual conflicting operation pairs in a submitted interleaving; return a topological serial order or an explicit directed cycle.
+Two individually ordered tasks can still interfere when their operations are interleaved. SerialWitness asks a narrow question: **does this particular schedule have the same conflict order as some serial execution?** It returns an order you can inspect, or the cycle that prevents one.
 
-## Example
+## One trace, two outcomes
 
-Transaction one reads alpha then writes beta; transaction two writes alpha then reads beta. Interleaving [0,1,2,3] is equivalent to serial order [one,two]. Interleaving [0,1,3,2] produces one → two on alpha and two → one on beta, a blocking cycle.
-
-## Consensus boundary
-
-The leader interprets the immutable source declarations. Each validator independently repeats the full interpretation of those ORIGINAL declarations, without seeing the leader output in its prompt. The custom `gl.vm.run_nondet_unsafe` validator validates and compares the complete canonical semantic result. It rejects malformed values, thrown errors and any semantic disagreement. Schema checking alone never accepts an interpretation. UNKNOWN is a supported consensus result that leads deterministically to REVIEW, not a guessed success.
-
-After consensus, ordinary deterministic code derives the proof. The model never chooses a key, a serial order or a graph result. Persisted records bind protocol version, owner-scoped ID, exact input, semantic result and proof by SHA-256 commitments. Records are public and immutable after analysis.
-
-## Use
-
-Deploy `contracts/serial_witness.py` with no constructor arguments on **Stable Studionet, chain 61999**, RPC `https://studio.genlayer.com/api`.
-
-| Call | Purpose | Permission |
+| Operation | Transaction | Action |
 | --- | --- | --- |
-| `seal(slug, payload)` | Validate and seal immutable JSON; return record ID | Calling wallet owns the record |
-| `analyze(record_id)` | Independently agreed semantic compilation and deterministic proof | Record owner; once |
-| `get_record(record_id)` | Read complete JSON record, or empty string if absent | Public |
-| `protocol()` | Read version, limits and exact model rules | Public |
+| 0 | one | Read alpha |
+| 1 | two | Replace alpha without reading it |
+| 2 | one | Replace beta without reading it |
+| 3 | two | Read beta |
 
-Record ID is lowercase owner address + `:` + slug. Slugs are 3–32 lowercase ASCII letters, digits or hyphens. Each owner may seal 16 records. Sealing the same slug with identical normalized JSON is idempotent; different content is rejected. Inputs cannot be edited or deleted. No admin override, funds, paid API, Appeal or automatic retries are implemented.
+Each transaction retains its own program order. The difference is where the two traces cross:
 
-Optional fresh network reproduction: `NEW_TEST=1 node tools/verify-live.mjs`. This explicitly creates a disposable zero-value development signer and new transactions, saves resumable state under `$XDG_STATE_HOME` (or `~/.local/state`), and leaves published evidence unchanged. It is unnecessary for checking existing evidence; never fund this signer. A failed/uncertain intent blocks new sends until inspected.
+| Submitted schedule | Recorded outcome | Diagnostic |
+| --- | --- | --- |
+| `0, 1, 2, 3` | SERIALIZABLE | Equivalent serial order: one, then two |
+| `0, 1, 3, 2` | CONFLICT | Alpha forces one → two; beta forces two → one |
 
-See [example input](examples/example.json), [calling tool](tools/calls.mjs), [mechanism](PROTOCOL.md), [network evidence](EVIDENCE.md), and [deployment](deployment.json). Use `TransactionHashVariant.LATEST_FINAL` for public reads. FINALIZED is network finality; a successful return and agreeing consensus must also be checked before claiming success.
+These two cases have been executed on Stable Studionet. The full input explicitly excludes other accesses; the abbreviated table above is explanatory.
+
+## Start with the existing run
 
 ```sh
 npm ci
-python -m pip install -r requirements-dev.txt
-python -m unittest discover -s tests -v
-python tools/sdk_check.py
-genvm-lint check contracts/serial_witness.py
-node tools/calls.mjs read
-python tools/verify_record.py evidence/example-record.json
+npm run read
 ```
 
-Unit and Direct Mode SDK checks use scripted models and are NOT live consensus. The read tool performs no writes. The write tool journals intent/hash and requires an explicit command; it never automatically resends an uncertain send. Use an EIP-1193 signer for ongoing integrations without exporting user keys.
+No wallet is needed for that command. It checks the deployed source, existing transaction receipts and finalized records without sending a write.
 
-## Limits
+**Deployment:** [`0xD112b813ab20c183261402C7de3Fc63c155Ff9bd`](https://explorer-studio.genlayer.com/address/0xD112b813ab20c183261402C7de3Fc63c155Ff9bd) · Studionet 61999
 
-Conflict serializability is sufficient for conflict equivalence, not necessary for view serializability. No tasks are executed, locked, rolled back or sandboxed. Atomicity, resource granularity, exhaustive accesses and absence of hidden effects are caller declarations. It does not prove application invariants, snapshot isolation, real-time ordering, crash recovery, or physical execution correctness. Commutative writes are conservatively conflicts; no application-specific algebra is assumed. Up to five transactions/resources and ten atomic operations are supported.
+[Recorded runs and votes](audit/studionet.md) · [Deployment manifest](deployment.json)
 
-Wallet ownership proves address control, not a unique person or a truthful declaration. Validators may share interpretation errors. Text is untrusted and can contain prompt injection; instructions constrain its interpretation but cannot guarantee model robustness. Uncertainty blocks the entire record. Do not submit private data. This is a development-network primitive with no mainnet security or availability guarantee.
+## How to act on a result
 
-## Compatibility
+**SERIALIZABLE** supplies `proof.serial_order`. Every directed conflict edge must point forward in that order.
 
-Official network configuration and custom-equivalence documentation were checked on 2026-11-03. Actual RPC returned `0xf22f` and zero gas price before writes. JavaScript SDK `genlayer-js` 1.1.8 and `viem` 2.57.8 are pinned; Python testing uses `genlayer-test` 0.29.2 and SDK v0.3.0-rc7. The source pins a specific GenVM runner. The linter reports a newer runner exists; this project records compatibility of its declared runner, not untested future versions.
+**CONFLICT** supplies `proof.cycle` and the operation/resource witnesses in `proof.edges`. Use them to locate the incompatible ordering before changing the plan. It is not a report of observed data corruption.
 
-Official references: [Networks](https://docs.genlayer.com/developers/networks), [Equivalence Principle](https://docs.genlayer.com/developers/intelligent-contracts/equivalence-principle), [SDK source](https://github.com/genlayerlabs/genlayer-js). MIT license.
+**REVIEW** lists uncertain matrix cells. Resolve the missing access description first; there is no supported serial-order claim to use yet.
+
+## Why interpretation is on-chain
+
+A task may “replace” a value, “read” it, or “append using the existing contents.” GenLayer validators independently turn those descriptions into READ / WRITE / BOTH / NONE / UNKNOWN for every operation-resource pair. The leader's matrix is accepted only if the validator's full independent interpretation agrees. Checking array dimensions alone does not establish an access pattern.
+
+Ordinary code then constructs the precedence graph from the submitted interleaving. A deterministic topological sort or cycle search supplies the result. No model is asked to guess whether the schedule is safe, and the contract does not execute the tasks.
+
+## Engineer's guide
+
+- [Describe operations, submit calls and verify results](manual/operation.md)
+- [Conflict rules, ordering algorithm and cycle diagnosis](manual/conflicts.md)
+- [Security boundaries](SECURITY.md)
+- [Python contract](contracts/serial_witness.py) · [Full example](examples/example.json)
+
+Useful for public Agent batch plans and small abstract resource schedules. Correctness depends on truthful, exhaustive access declarations and the stated atomicity model. It does not provide locking, rollback or transaction isolation for another system. All submitted text is public. MIT licensed.

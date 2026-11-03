@@ -1,10 +1,10 @@
-# SerialWitness verification
+# Recorded Studionet runs
 
 Network: Stable Studionet, chain **61999**, RPC `https://studio.genlayer.com/api`.
 
 Contract: [`0xD112b813ab20c183261402C7de3Fc63c155Ff9bd`](https://explorer-studio.genlayer.com/address/0xD112b813ab20c183261402C7de3Fc63c155Ff9bd)
 
-Source SHA-256: `cb7c7f3b83486cb62233d463e3920400ad8ca3b7b199bca1e579965cce22adc0`. `gen_getContractCode` returned the exact local source; [source check](evidence/source-check.json). All calls used zero value and `leaderOnly:false`; preflight checked chain and zero gas price.
+Source SHA-256: `cb7c7f3b83486cb62233d463e3920400ad8ca3b7b199bca1e579965cce22adc0`. `gen_getContractCode` returned the exact local source; [source check](../evidence/source-check.json). All calls used zero value and `leaderOnly:false`; preflight checked chain and zero gas price.
 
 ## Real network transactions
 
@@ -20,8 +20,8 @@ These are actual RPC receipts, not mocked responses. Individual receipts retain 
 
 ## Finalized records
 
-- [cycle-record.json](evidence/cycle-record.json): `CONFLICT`; record ID `0x3a2d532ea73be33f6577607e2eb1b8d394807e8b:cycle`.
-- [example-record.json](evidence/example-record.json): `SERIALIZABLE`; record ID `0x3a2d532ea73be33f6577607e2eb1b8d394807e8b:example`.
+- [cycle-record.json](../evidence/cycle-record.json): `CONFLICT`; record ID `0x3a2d532ea73be33f6577607e2eb1b8d394807e8b:cycle`.
+- [example-record.json](../evidence/example-record.json): `SERIALIZABLE`; record ID `0x3a2d532ea73be33f6577607e2eb1b8d394807e8b:example`.
 
 Each persisted record was read using LATEST_FINAL. `tools/verify_record.py` recomputes the exact deterministic proof and both content commitments from the actual accepted semantic result. The RPC read checker additionally verifies network identity, exact deployed source, transaction sender/target/method/arguments, successful execution, majority agreement and equality with the saved finalized state. It decodes the raw RPC's base64 calldata with the official SDK, rather than parsing the human-readable pretty-printer.
 
@@ -29,9 +29,9 @@ The evidence signer is a disposable development account, generated for zero-valu
 
 ## Offline validation
 
-- [Unit suite](evidence/unit-tests.txt): 18 test methods, including adversarial semantics and bounded exhaustive algorithm checks. Model and host are mocked.
-- [Official SDK Direct Mode](evidence/sdk-check.txt): storage, calldata, callback serialization, owner permissions, idempotent sealing, terminal-state protection, and captured validator acceptance/rejection. LLM responses are scripted. No live consensus is claimed by this test.
-- [GenVM lint](evidence/lint.txt): syntax/contract validation passed. The declared runner is pinned; a newer-runner informational note is retained.
-- [Read-only network acceptance](evidence/live-read-check.txt): checks the existing deployment and saved records without writes.
+- [Unit suite](../evidence/unit-tests.txt): 18 test methods, including adversarial semantics and bounded exhaustive algorithm checks. Model and host are mocked.
+- [Official SDK Direct Mode](../evidence/sdk-check.txt): storage, calldata, callback serialization, owner permissions, idempotent sealing, terminal-state protection, and captured validator acceptance/rejection. LLM responses are scripted. No live consensus is claimed by this test.
+- [GenVM lint](../evidence/lint.txt): syntax/contract validation passed. The declared runner is pinned; a newer-runner informational note is retained.
+- [Read-only network acceptance](../evidence/live-read-check.txt): checks the existing deployment and saved records without writes.
 
-Known semantic and execution limits are in [README](README.md) and [protocol](PROTOCOL.md). Majority agreement can preserve a shared model mistake. Finality is evidence of the recorded computation, not truth of caller declarations.
+Known semantic and execution limits are in [overview](../README.md) and [conflict analysis](../manual/conflicts.md). Majority agreement can preserve a shared model mistake. Finality is evidence of the recorded computation, not truth of caller declarations.

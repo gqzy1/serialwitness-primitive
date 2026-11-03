@@ -1,4 +1,4 @@
-# SerialWitness protocol
+# How a schedule becomes a conflict graph
 
 ## State and commitments
 
@@ -6,7 +6,7 @@
 
 Canonical JSON uses sorted keys, compact separators and UTF-8 without ASCII escaping. `input_hash = SHA256({version,input})` and `result_hash = SHA256({input_hash,semantic,proof})`. The full stored record additionally binds owner and owner-scoped ID; a content digest alone does not authenticate a signer or chain. Recompute commitments with `tools/verify_record.py`, then independently verify source, transaction sender/target/call and FINALIZED receipt using the read tool.
 
-## Mathematical rule
+## Conflicting accesses
 
 Compile atomic-operation descriptions into a complete resource-access matrix; derive precedence edges from actual conflicting operation pairs in a submitted interleaving; return a topological serial order or an explicit directed cycle.
 
@@ -16,8 +16,10 @@ The operation array fixes per-transaction program order. The schedule must be an
 
 The access matrix has exactly one row per operation and one column per resource. NONE requires explicit exclusion or an exhaustive access statement; lack of information must be UNKNOWN. The contract checks structural completeness, while independent semantic execution checks the meaning of every cell. No operation, access or transaction is created by the model.
 
-## Reuse and distinction
+## Using a cycle witness
 
-VOLTA and RunbookLatch derive explicit prerequisite constraints from procedure text. This contract derives conflicts from reads/writes and a concrete interleaving; one transaction can acquire edges in both directions across operations. It neither imports a prerequisite graph nor runs a procedure. No existing application is paired with it.
+For every adjacent pair of transactions in `proof.cycle`, find a matching `proof.edges` entry. Its `before`, `after` and `resource` indices identify the two scheduled operations that forced that precedence. A cycle closes on its first transaction and the result contains no purported serial order. Inspect those operation descriptions before proposing another schedule.
 
-Shared engineering conventions (owner-scoped records, explicit UNKNOWN, canonical hashes and independent validators) are protocol scaffolding. The semantic objects and deterministic algorithms above constitute this primitive's mechanism.
+In the deployed example, the cyclic order is `[0,1,3,2]`. The alpha conflict requires transaction one before two, while the beta conflict requires two before one. The recorded witness is `[0,1,0]`. Rearranging the schedule to `[0,1,2,3]` removes the reverse edge and yields serial order `[0,1]`.
+
+This is conflict equivalence over declared abstract resources. A cyclic schedule can still be view-serializable in special cases; CONFLICT must not be translated into a claim of actual corruption or an assertion that every possible equivalence test would fail.
