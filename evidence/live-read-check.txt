@@ -1,0 +1,8 @@
+deploy 0x6a638930f8df882da675216aeb14b9ee74b39202a6125ac0eb21e1d11185b17e FINALIZED / MAJORITY_AGREE / SUCCESS
+seal-example 0xbaa1806c80a46c20e270c695d84fac0561f7152a83da5e53628834a93a69fcb4 FINALIZED / MAJORITY_AGREE / SUCCESS
+analyze-example 0x1cd8958aec925f3134ff9c919c301cc6839f81d0e8a50613a0eada277720851f FINALIZED / MAJORITY_AGREE / SUCCESS
+seal-cycle 0xde7cc1f08b36b7323c3f40ee76a4383f63bb30cf33a355e9d61ec6766e6a2580 FINALIZED / MAJORITY_AGREE / SUCCESS
+analyze-cycle 0xaa5374c92becc78c1532f1a8c057a8709226430ea22040990e3704a1052f5539 FINALIZED / MAJORITY_AGREE / SUCCESS
+0x3a2d532ea73be33f6577607e2eb1b8d394807e8b:cycle CONFLICT latest-final matches saved record
+0x3a2d532ea73be33f6577607e2eb1b8d394807e8b:example SERIALIZABLE latest-final matches saved record
+PASS: chain, exact source, finalized agreeing successful receipts, sender/target/call binding and latest-final state.

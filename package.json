@@ -1,0 +1,13 @@
+{
+  "name": "serialwitness-primitive",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "read": "node tools/calls.mjs read"
+  },
+  "dependencies": {
+    "genlayer-js": "1.1.8",
+    "viem": "2.57.8"
+  }
+}

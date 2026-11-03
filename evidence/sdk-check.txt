@@ -1,0 +1,1 @@
+PASS official SDK: storage, calldata, callback pickling, owner checks, idempotent seal, terminal write protection; captured validator accepts independent agreement and rejects changed semantics and leader error. Model mocked.

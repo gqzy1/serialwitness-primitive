@@ -1,0 +1,87 @@
+{
+  "id": "0x3a2d532ea73be33f6577607e2eb1b8d394807e8b:example",
+  "input": {
+    "operations": [
+      {
+        "description": "Read ONLY alpha. Write nothing. All other resources are untouched.",
+        "transaction": 0
+      },
+      {
+        "description": "Replace ONLY alpha with a constant, without reading any resource. All other resources are untouched.",
+        "transaction": 1
+      },
+      {
+        "description": "Replace ONLY beta with a constant, without reading any resource. All other resources are untouched.",
+        "transaction": 0
+      },
+      {
+        "description": "Read ONLY beta. Write nothing. All other resources are untouched.",
+        "transaction": 1
+      }
+    ],
+    "resources": [
+      "alpha",
+      "beta"
+    ],
+    "schedule": [
+      0,
+      1,
+      2,
+      3
+    ],
+    "scope": "Fictional abstract cache values; operations are atomic and have no hidden accesses.",
+    "transactions": [
+      "one",
+      "two"
+    ]
+  },
+  "input_hash": "09b06790f352fc5b51a8671c366f54d76d3742cffdbde3d6340824a65f7179e6",
+  "owner": "0x3a2d532ea73be33f6577607e2eb1b8d394807e8b",
+  "proof": {
+    "cycle": [],
+    "edges": [
+      {
+        "after": 1,
+        "before": 0,
+        "from": 0,
+        "resource": 0,
+        "to": 1
+      },
+      {
+        "after": 3,
+        "before": 2,
+        "from": 0,
+        "resource": 1,
+        "to": 1
+      }
+    ],
+    "serial_order": [
+      0,
+      1
+    ],
+    "status": "SERIALIZABLE"
+  },
+  "result_hash": "01b2a203548c633563bcc2de4b02c974b9786bfe29143ea47f9ddeff544e1a36",
+  "semantic": {
+    "access": [
+      [
+        "READ",
+        "NONE"
+      ],
+      [
+        "WRITE",
+        "NONE"
+      ],
+      [
+        "NONE",
+        "WRITE"
+      ],
+      [
+        "NONE",
+        "READ"
+      ]
+    ]
+  },
+  "state": "SERIALIZABLE",
+  "version": "serialwitness-1"
+}

@@ -1,0 +1,35 @@
+{
+  "scope": "Fictional abstract cache values; operations are atomic and have no hidden accesses.",
+  "resources": [
+    "alpha",
+    "beta"
+  ],
+  "transactions": [
+    "one",
+    "two"
+  ],
+  "operations": [
+    {
+      "transaction": 0,
+      "description": "Read ONLY alpha. Write nothing. All other resources are untouched."
+    },
+    {
+      "transaction": 1,
+      "description": "Replace ONLY alpha with a constant, without reading any resource. All other resources are untouched."
+    },
+    {
+      "transaction": 0,
+      "description": "Replace ONLY beta with a constant, without reading any resource. All other resources are untouched."
+    },
+    {
+      "transaction": 1,
+      "description": "Read ONLY beta. Write nothing. All other resources are untouched."
+    }
+  ],
+  "schedule": [
+    0,
+    1,
+    2,
+    3
+  ]
+}

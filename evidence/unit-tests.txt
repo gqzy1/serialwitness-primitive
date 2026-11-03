@@ -1,0 +1,23 @@
+test_acyclic (test_contract.ContractTests.test_acyclic) ... ok
+test_blind_write_conflict (test_contract.ContractTests.test_blind_write_conflict) ... ok
+test_boolean_operation (test_contract.ContractTests.test_boolean_operation) ... ok
+test_cycle (test_contract.ContractTests.test_cycle) ... ok
+test_duplicate_json (test_contract.ContractTests.test_duplicate_json) ... ok
+test_exhaustive_schedules (test_contract.ContractTests.test_exhaustive_schedules) ... ok
+test_model_shape (test_contract.ContractTests.test_model_shape) ... ok
+test_oversize (test_contract.ContractTests.test_oversize) ... ok
+test_payload (test_contract.ContractTests.test_payload) ... ok
+test_program_order (test_contract.ContractTests.test_program_order) ... ok
+test_read_read (test_contract.ContractTests.test_read_read) ... ok
+test_unknown_blocks (test_contract.ContractTests.test_unknown_blocks) ... ok
+test_unknown_field (test_contract.ContractTests.test_unknown_field) ... ok
+test_untrimmed (test_contract.ContractTests.test_untrimmed) ... ok
+test_validator_agrees (test_contract.ContractTests.test_validator_agrees) ... ok
+test_validator_errors (test_contract.ContractTests.test_validator_errors) ... ok
+test_validator_leader_error (test_contract.ContractTests.test_validator_leader_error) ... ok
+test_validator_semantic_disagreement (test_contract.ContractTests.test_validator_semantic_disagreement) ... ok
+
+----------------------------------------------------------------------
+Ran 18 tests in 0.002s
+
+OK

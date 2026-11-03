@@ -1,0 +1,88 @@
+{
+  "id": "0x3a2d532ea73be33f6577607e2eb1b8d394807e8b:cycle",
+  "input": {
+    "operations": [
+      {
+        "description": "Read ONLY alpha. Write nothing. All other resources are untouched.",
+        "transaction": 0
+      },
+      {
+        "description": "Replace ONLY alpha with a constant, without reading any resource. All other resources are untouched.",
+        "transaction": 1
+      },
+      {
+        "description": "Replace ONLY beta with a constant, without reading any resource. All other resources are untouched.",
+        "transaction": 0
+      },
+      {
+        "description": "Read ONLY beta. Write nothing. All other resources are untouched.",
+        "transaction": 1
+      }
+    ],
+    "resources": [
+      "alpha",
+      "beta"
+    ],
+    "schedule": [
+      0,
+      1,
+      3,
+      2
+    ],
+    "scope": "Fictional abstract cache values; operations are atomic and have no hidden accesses.",
+    "transactions": [
+      "one",
+      "two"
+    ]
+  },
+  "input_hash": "3dfe5e2fb37a4fb2bcfa08ecaf83e4aca59b73e8f526e6e6f4434f3273a13239",
+  "owner": "0x3a2d532ea73be33f6577607e2eb1b8d394807e8b",
+  "proof": {
+    "cycle": [
+      0,
+      1,
+      0
+    ],
+    "edges": [
+      {
+        "after": 1,
+        "before": 0,
+        "from": 0,
+        "resource": 0,
+        "to": 1
+      },
+      {
+        "after": 2,
+        "before": 3,
+        "from": 1,
+        "resource": 1,
+        "to": 0
+      }
+    ],
+    "serial_order": [],
+    "status": "CONFLICT"
+  },
+  "result_hash": "fd4b17fae115a08364be5ecd864279c7263107f9cc76073e0cc473df3878c7a8",
+  "semantic": {
+    "access": [
+      [
+        "READ",
+        "NONE"
+      ],
+      [
+        "WRITE",
+        "NONE"
+      ],
+      [
+        "NONE",
+        "WRITE"
+      ],
+      [
+        "NONE",
+        "READ"
+      ]
+    ]
+  },
+  "state": "CONFLICT",
+  "version": "serialwitness-1"
+}

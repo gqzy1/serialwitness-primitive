@@ -1,0 +1,74 @@
+{
+  "network": "Stable Studionet",
+  "chain_id": 61999,
+  "rpc": "https://studio.genlayer.com/api",
+  "owner": "0x3A2d532EA73Be33f6577607e2Eb1b8d394807E8B",
+  "steps": {
+    "deploy": {
+      "intent": {
+        "method": "deploy",
+        "source_sha256": "cb7c7f3b83486cb62233d463e3920400ad8ca3b7b199bca1e579965cce22adc0",
+        "leaderOnly": false,
+        "value": "0"
+      },
+      "started_at": "2026-11-03T06:27:27.221Z",
+      "state": "VERIFIED",
+      "hash": "0x6a638930f8df882da675216aeb14b9ee74b39202a6125ac0eb21e1d11185b17e"
+    },
+    "seal-example": {
+      "intent": {
+        "method": "seal",
+        "args": [
+          "example",
+          "{\"scope\":\"Fictional abstract cache values; operations are atomic and have no hidden accesses.\",\"resources\":[\"alpha\",\"beta\"],\"transactions\":[\"one\",\"two\"],\"operations\":[{\"transaction\":0,\"description\":\"Read ONLY alpha. Write nothing. All other resources are untouched.\"},{\"transaction\":1,\"description\":\"Replace ONLY alpha with a constant, without reading any resource. All other resources are untouched.\"},{\"transaction\":0,\"description\":\"Replace ONLY beta with a constant, without reading any resource. All other resources are untouched.\"},{\"transaction\":1,\"description\":\"Read ONLY beta. Write nothing. All other resources are untouched.\"}],\"schedule\":[0,1,2,3]}"
+        ],
+        "leaderOnly": false,
+        "value": "0"
+      },
+      "started_at": "2026-11-03T06:30:01.483Z",
+      "state": "VERIFIED",
+      "hash": "0xbaa1806c80a46c20e270c695d84fac0561f7152a83da5e53628834a93a69fcb4"
+    },
+    "analyze-example": {
+      "intent": {
+        "method": "analyze",
+        "args": [
+          "0x3a2d532ea73be33f6577607e2eb1b8d394807e8b:example"
+        ],
+        "leaderOnly": false,
+        "value": "0"
+      },
+      "started_at": "2026-11-03T06:30:41.378Z",
+      "state": "VERIFIED",
+      "hash": "0x1cd8958aec925f3134ff9c919c301cc6839f81d0e8a50613a0eada277720851f"
+    },
+    "seal-cycle": {
+      "intent": {
+        "method": "seal",
+        "args": [
+          "cycle",
+          "{\"scope\":\"Fictional abstract cache values; operations are atomic and have no hidden accesses.\",\"resources\":[\"alpha\",\"beta\"],\"transactions\":[\"one\",\"two\"],\"operations\":[{\"transaction\":0,\"description\":\"Read ONLY alpha. Write nothing. All other resources are untouched.\"},{\"transaction\":1,\"description\":\"Replace ONLY alpha with a constant, without reading any resource. All other resources are untouched.\"},{\"transaction\":0,\"description\":\"Replace ONLY beta with a constant, without reading any resource. All other resources are untouched.\"},{\"transaction\":1,\"description\":\"Read ONLY beta. Write nothing. All other resources are untouched.\"}],\"schedule\":[0,1,3,2]}"
+        ],
+        "leaderOnly": false,
+        "value": "0"
+      },
+      "started_at": "2026-11-03T06:31:34.099Z",
+      "state": "VERIFIED",
+      "hash": "0xde7cc1f08b36b7323c3f40ee76a4383f63bb30cf33a355e9d61ec6766e6a2580"
+    },
+    "analyze-cycle": {
+      "intent": {
+        "method": "analyze",
+        "args": [
+          "0x3a2d532ea73be33f6577607e2eb1b8d394807e8b:cycle"
+        ],
+        "leaderOnly": false,
+        "value": "0"
+      },
+      "started_at": "2026-11-03T06:32:11.858Z",
+      "state": "VERIFIED",
+      "hash": "0xaa5374c92becc78c1532f1a8c057a8709226430ea22040990e3704a1052f5539"
+    }
+  },
+  "address": "0xD112b813ab20c183261402C7de3Fc63c155Ff9bd"
+}
